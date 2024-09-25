@@ -4,8 +4,9 @@ import Login from "./pages/Login"
 import SignUp from "./pages/SignUp"
 import HomeLogin from './pages/HomeLogin'
 import Post from './pages/Post'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Edit from "./pages/Edit"
+import { auth } from "./firebase"
 
 
 
@@ -13,10 +14,12 @@ import Edit from "./pages/Edit"
 
 function App() {
  
-const [PostValue, setPostValue] = useState("");
-const [editText, seteditText] = useState("");
-const [correctionValue, setCorrection] = useState("");
+const [PostValue, setPostValue] = useState(""); //포스트 페이지 내용
+const [editText, seteditText] = useState(""); //현재 에딧 페이지 내용
+const [correctionValue, setCorrection] = useState(""); //수정한 에딧 페이지 내용
 const [id, setId] = useState("");
+
+const [isLoading, setIsLoading] = useState(true) //로그인 상태
 
 const handlePost = (value, id) => {
   console.log(value);
@@ -31,6 +34,21 @@ const handleEdit = (text, id) => {
 }
  
 
+const init = async() => {
+  //로그인 상태 변화 감지
+  await auth.authStateReady();
+  console.log('인증 완료', auth)
+  // 인증 준비 다 되면 로딩 false
+  setIsLoading(false);
+}
+
+
+useEffect(() => {
+  init();
+}, []);
+
+
+if (isLoading) return <p>Loading...</p>;
 
   return (
     <div>
