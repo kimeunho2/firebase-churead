@@ -1,0 +1,215 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#root {
+  height: 100vh;
+}
+
+
+
+.loginPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+  height: 100vh;
+  background-color: #101010; 
+}
+
+
+.nav {
+  background-color: #151515;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.homeLogin {
+  background-color: black;
+}
+
+
+.form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.logo {
+  width: 138px;
+  height: 80px;
+}
+
+
+.login-main-text {
+  color: white;
+  font-weight: 700;
+  font-size: 16px;
+  margin: 20px 0;
+  
+}
+
+.loginButton {
+  background-color: white;
+  color: #101010;
+  width: 290px;
+  height: 56px;
+  padding: 16px;
+  margin: 5px;
+  border-radius: 16px;
+}
+
+.loginButton-Img {
+  width: 50px;
+  /* 아래 속성으로 텍스트와 수직 정렬을 맞출 수 있습니다 */
+  margin-right: 10px;
+}
+
+
+.Account-Text {
+  color: #777777;
+  margin: 20px 0;
+}
+
+.Account-Link {
+  color: #0095f6;
+}
+
+.GoogleLogin {
+  color: white;
+  width: 290px;
+  height: 90px;
+  border: solid 1px #f3f5f7;
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.or {
+  color: #777777;
+  margin-bottom: 25px;
+}
+
+
+
+.Input-Field {
+  background-color: #1e1e1e;
+  color: #777777;
+  width: 290px;
+  height: 55px;
+  border-radius: 12px;
+  padding: 19px 17px 19px 17px;
+  margin: 5px;
+}
+
+.logout-Button {
+  background-color: white;
+  margin: 10px;
+  width: 100px;
+  border-radius: 10px;
+
+}
+
+.logo-logoutButton {
+  display: flex;
+  align-items: center; /* 수직 가운데 정렬 */
+  justify-content: space-between; /* 양쪽 끝에 요소 배치 */
+  width: 100%;
+  padding: 0 20px; /* 좌우 여백 */
+}
+
+.center-wrapper {
+  display: flex;
+  justify-content: center; /* 로고를 중앙에 정렬 */
+  flex: 1; /* 가능한 공간을 차지하여 정확히 가운데 배치 */
+}
+
+
+.user-iamage {
+  width: 100px;
+}
+
+.homeLoginText {
+  color:  white;
+}
+
+.itemButton {
+  width: 30px;
+  height: 30px;
+}
+
+.userImage-ItemButtons-text {
+  padding: 0 10px;
+  display: flex;
+  
+}
+
+.itemButtons {
+  display: flex;
+  
+}
+
+.UserName-Text-ItemButtons {
+  display: flex;
+}
+
+.post-text {
+  display: flex;
+  color: white;
+  justify-content: space-between; /* 요소들을 양 끝에 배치 */
+  align-items: center; /* 수직 가운데 정렬 */
+  width: 100%; /* 전체 너비 사용 */
+ 
+
+  
+}
+
+.center-text {
+  flex: 1; /* 가능한 공간을 차지 */
+  text-align: center; /* 텍스트를 가운데 정렬 */
+}
+
+.post-Page {
+  height: 100vh;
+  background-color: #101010; 
+}
+
+.post-userName {
+  color: white;
+}
+
+.textarea-class {
+  width: 279px;
+  height: 150px;
+  background-color: #101010;
+  color: white;
+}
+
+.post-userImage-userName-area{
+  display: flex;
+}
+
+.Reply {
+  color: #f3f5f7;
+  margin: 30px;
+}
+
+.post {
+  background-color: white;
+  color: black;
+  width: 62px;
+  height: 34px;
+  border-radius: 10px;
+  margin: 30px;
+
+}
+
+.Reply-Post {
+  display: flex;
+
+}
