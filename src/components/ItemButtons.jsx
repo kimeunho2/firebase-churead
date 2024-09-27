@@ -2,12 +2,13 @@ import React from 'react'
 
 
 
-const ItemButtons = ({onDelete, edit, text, id}) => {
+const ItemButtons = ({onDelete, edit, churead, userId}) => {
 
 const handleEdit = () => {
-  edit(text, id);
+ 
+  edit(churead, userId); //HomeLogin의 edit 함수 실행
 
-  console.log(text, id);
+
 
 }   
 

@@ -1,58 +1,70 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState } from 'react';
 import Item from '../components/Item';
 import Nav from '../components/Nav';
 import Button from '../components/Button';
-import { initialFeedList } from '../data/response';
 import { useNavigate } from 'react-router-dom';
+import { auth, db } from '../firebase';
+import { collection, deleteDoc, doc, increment, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
 
 
 
 
 
-const HomeLogin = ({PostValue, onEdit, correctionValue, id}) => {
-  const [feedList, setFeedList] = useState(initialFeedList);
+
+const HomeLogin = ({onEdit, correctionValue, userId}) => {
+  
+  //** 피드 글 작성자인 경우에만 edit,delete 버튼 보여주기
+  // 1. 로그인한 사용자의 id값 가져오기
+  // 2. 게시글의 작성자 id값 가져오기 (userId)
+  // 3. 두 id 값을 비교
+  // 4. 비교한 값이 같은 경우(true): 아이콘을 보여주기
+  // 5. 비교한 값이 다를 경우(false): 아이콘 숨기기
+  
+  //회원가입한 유저의 정보
+  const user = auth.currentUser
+  
+  // 피드 글 목록
+  const [feedList, setFeedList] = useState([]);
+
+  // 글 작성자인지 아닌지 체크
+  const [isAuthor, setIsAuthor] = useState(false);
   
   const navigate = useNavigate();
 
-  /**피드 수정하기
-   * 1. 버튼을 클릭하면 Edit.jsx로 이동
-   * 2. Edit.jsx에서 내용을 기존 내용으로 채운다.
-   *  - 아이템에 있는 사용자가 작성한 내용을 app.js로 가져온다.
-   *  - 그 내용 데이터를 Edit으로 보낸다.  
-   * 3. 내응을 수정하고, 수정 버튼을 누르면 수정한 내용으로 변경된다.
-   *  - 가져온 값이 있다면 id 값을 비교해서 일치하는 것을 수정한다.
-   *  - 게시 버튼을 누르면 홈로그인에 피드리스트의 텍스트를 수정한다.
-   */
+  let unsubscribe = null;
 
-  const edit = (text, id) => {
-    // console.log(text);
-    // seteditText(text);
 
-    onEdit(text, id);
+  //에딧 버튼 클릭시 작동
+  const edit = (churead, userId, data) => {
+    onEdit(churead, userId, data); //app.js의 함수 실행
     
     navigate('/edit');
   }
   
 
  
+// 삭제 버튼 클릭시 작동
+  const onDelete = async (data) => {
 
-  const onDelete = (id) => {
-    const updatedFeedList = feedList.filter((item) => item.id !== id)
-    
+    if (data.userId !== user.uid) return;
 
 
-    console.log("삭제되었습니다.1", updatedFeedList);
+    try {
+      await deleteDoc(doc(db, 'chureads', data.id))
 
-    setFeedList(updatedFeedList, id);
+    } catch (error) {
+      console.log(error.message)
+      
+    }
+
   }
 
 
   useEffect(() => {
-    console.log(correctionValue, id);
     if (!correctionValue) return;
 
     const correctionFeedList = feedList.map((feed) => {
-       if (feed.id === id) {
+       if (feed.userId === userId) {
         return {
           ...feed,
           churead: correctionValue, 
@@ -65,26 +77,63 @@ const HomeLogin = ({PostValue, onEdit, correctionValue, id}) => {
     setFeedList(correctionFeedList);}, [correctionValue]);
 
 
-    
-    
-    useEffect(() => {
-    console.log("1231", PostValue);
-    if (!PostValue) return;
-   
-    const addFeedList = {
-      id: initialFeedList.length +1,
-      userName: "kimeunho",
-      churead: PostValue,
-      likeCount: 0,
-    }
 
-    setFeedList([addFeedList, ...feedList])
+    // 파이어베이스 데이터 베이스 불러오기
+    const getLiveData = () => {
+      const colletionRef = collection(db, 'chureads');
+   
+      
+      const cureadQuery = query(colletionRef, orderBy('createAt', 'desc'));
+  
+      unsubscribe = onSnapshot(cureadQuery, (snapshot) => {
+      
+        const datas = snapshot.docs.map(item => {
+        
+          return { id: item.id, ...item.data()};
+
+        });
+        setFeedList(datas); 
+        
+      });
+      
+    };
     
+ 
+
+  useEffect(() => { 
+    getLiveData();
+
+    return () => {
+      unsubscribe && unsubscribe()
+    }
   }, []);
 
 
+  //로그아웃 버튼 클릭시
+  const handleLogout = async () => {
+    const ok = window.confirm("정말 로그아웃 하시겠습니까?");
+    
+    if (!ok) return; // 아니오 버튼 클릭시 리턴
 
+    try {
+      await auth.signOut() 
+      navigate('/login') //auth. signOut() 비동기 처리 성공 시 이동
+
+    } catch (error) {
+      console.log(error.message)
+
+    }
+
+  } 
   
+//하트 클릭시 작동
+  const handleLike = async (data) => {
+
+  await updateDoc(doc(db, 'chureads', data.id),{likeCount: increment(1)} );
+
+
+}
+
 
   return (
     <div className='homeLogin'>
@@ -93,18 +142,18 @@ const HomeLogin = ({PostValue, onEdit, correctionValue, id}) => {
     <img src="/images/logo 1.svg" alt="Logo" className='logo' />
     </div>
     <div>
-      <Button text="로그아웃" className="logout-Button"/>
+      <Button text="로그아웃" className="logout-Button" onClick={handleLogout}/>
     </div>
     </div>
     <div className='homeLoginText'>
       {feedList.map((feed) => 
         <Item 
-          userName={feed.userName}
-          text={feed.churead}
-          key={feed.id}
-          userProfileImage={feed.userProfileImage}
-          likeCount={feed.likeCount} onDelete={onDelete} id={feed.id}
-          edit={edit}/>
+          data={feed}
+          key={feed.id} loginid={user.uid}
+          onDelete={onDelete} 
+          edit={edit} onLike={handleLike}
+         />
+ 
         ) 
       }
       <Nav/>

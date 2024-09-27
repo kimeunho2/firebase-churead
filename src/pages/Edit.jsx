@@ -5,8 +5,10 @@ import UserName from '../components/UserName'
 import Button from '../components/Button'
 import Nav from '../components/Nav'
 import { Link, useNavigate } from 'react-router-dom';
+import { doc, updateDoc } from 'firebase/firestore'
+import { db } from '../firebase'
 
-const Edit = ({onPost, editText, id}) => {
+const Edit = ({onPost, editText, data}) => {
   
   
 
@@ -21,16 +23,19 @@ const Edit = ({onPost, editText, id}) => {
       const {value} = event.target;
 
       setValue(value)
-      // console.log(value);
-
-
-      
+      // console.log(value);  
   }
 
 
-  const handleClick = () => {
-    console.log(id);
-    onPost(value, id)
+  const handleClick = async () => {
+    console.log(data);
+    
+    await updateDoc(doc(db, 'chureads', data.id), {
+      churead : value,
+    });
+    
+    
+    onPost(value, data.userId) //
 
     history("/Homelogin");
   }
@@ -56,7 +61,7 @@ const Edit = ({onPost, editText, id}) => {
         </div>
         <div className='Reply-Post'>
         <p className='Reply'>누구에게나 답글 및 인용 허용</p>
-        <Button type="submit" text="게시" onClick={handleClick} value={value}  className="post"/>
+        <Button type="submit" text="수정" onClick={handleClick} value={value}  className="post"/>
         <Nav/>
         </div>
         </div>

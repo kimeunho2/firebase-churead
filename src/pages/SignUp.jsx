@@ -42,8 +42,6 @@ const SignUp = () => {
 
 
 
-
-
       console.log("name", name);
       console.log("email", email);
       console.log("password", password);
@@ -66,6 +64,7 @@ const SignUp = () => {
       } catch (error) {
         console.error(error)
         setErrrorMessage(error.message)
+        
       } finally {     
 
       setIsLoading(false);      

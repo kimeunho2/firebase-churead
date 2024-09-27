@@ -5,23 +5,29 @@ import UserName from '../components/UserName'
 import Text from '../components/Text'
 import ItemButtons from './ItemButtons'
 
-const Item = ({userName, text, userProfileImage, likeCount, onDelete, id, edit }) => {
+const Item = ({data, onDelete, onLike, edit, loginid}) => {
   
+const {userName, churead, userProfileImage, likeCount, userId} = data; 
 
-  
+console.log("userid", userId);
+console.log("loginid", loginid);
 
 
   const handleDelete = () => {
     const isConfirmed = window.confirm("정말 삭제하시겠습니까?");
 
     if (isConfirmed) {
-      onDelete(id);
+      onDelete(data);
     } else {
       console.log("삭제가 취소되었습니다.");
     }
 
   };  
   
+  const handleLike = () => {
+    onLike(data);
+    console.log(userId);
+  }
   
   
   return (
@@ -34,12 +40,22 @@ const Item = ({userName, text, userProfileImage, likeCount, onDelete, id, edit }
     <div className='UserName-Text-ItemButtons'>
     <div className='userName-Text'>
     <UserName userName={userName}/>
-    <Text text={text}/>
+    <Text text={churead}/>
     </div>
-    <ItemButtons onDelete={handleDelete} edit={edit} text={text} id={id} />
+    {userId === loginid ? (
+  <ItemButtons
+    onDelete={handleDelete}
+    churead={churead}
+    userId={userId}
+    edit={edit}
+    loginid={loginid}
+    data={data}
+  />
+) : null}
     </div>
     </div>
-    <img src="/images/heart.svg" alt='하트'/>{likeCount}
+    <button type="button" onClick={handleLike}><img src="/images/heart.svg" alt="하트" />
+  {likeCount}</button>
     </div>
   )
 }
